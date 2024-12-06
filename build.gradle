@@ -1,0 +1,62 @@
+plugins {
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
+}
+
+architectury {
+    minecraft = rootProject.minecraft_version
+}
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "dev.architectury.loom"
+
+    archivesBaseName = rootProject.archives_base_name
+    version = rootProject.minecraft_version + "-" + rootProject.mod_version
+    group = rootProject.maven_group
+
+    loom {
+        silentMojangMappingsLicense()
+    }
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        mappings loom.officialMojangMappings()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.release = 21
+    }
+
+    java {
+        withSourcesJar()
+    }
+}
+
+allprojects {
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
+
+    repositories {
+        maven {
+            name = "neoforge"
+            url = "https://maven.neoforged.net/releases/"
+        }
+
+        maven { url = "https://hephaestus.dev/release" }
+        maven { url = "https://cursemaven.com" }
+        maven { url = "https://maven.parchmentmc.org" }
+        maven { url = "https://maven.tterrag.com/" }
+        maven { url = "https://storage.googleapis.com/devan-maven/" }
+        maven { url = "https://maven.shedaniel.me/" }
+        maven { url = "https://aperlambda.github.io/maven" }
+        maven { url = "https://maven.kotlindiscord.com/repository/terraformers/" }
+        maven { url = "https://mvn.devos.one/releases/" }
+        maven { url = "https://mvn.devos.one/snapshots/" }
+        maven { url = "https://maven.terraformersmc.com/" }
+        maven { url = "https://maven.cafeteria.dev/releases/" }
+        maven { url = "https://maven.gegy.dev" }
+        maven { url = "https://modmaven.dev" }
+    }
+}
